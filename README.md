@@ -15,4 +15,7 @@ git remote add origin git@github.com:15970515646/OSlab.git
 git branch -M main
 git push -u origin main
 
-#
+# commit my code
+git add -A
+git commit -m ""
+git push
