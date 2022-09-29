@@ -19,3 +19,6 @@ git push -u origin main		<br>
 git add -A			<br>
 git commit -m ""		<br>
 git push			<br>
+
+## get remote code  <br>
+git pull origin main    <br>
