@@ -1,0 +1,44 @@
+Exercise2
+	BIOS:加载GDT（和全局描述符相关）和IDT（和中断相关），初始化VGA和系统的初始化（硬件检查激活等），找到合适的位置加载操作系统，把控制权转交给操作系统。
+
+exercise3：
+boot.s: 先关闭中断（cli）；设置DS，ES， SS（# Set up the important data segment registers (DS, ES, SS).部分）；启用A20线（# Enable A20 部分）；加载GDT（lgdt gdtdesc）；然后进入32位的模式
+main.c：主要是bootmain()函数，它先将内核ELF头读到0x10000处，然后判断是否为正确的ELF格式，是的话，继续将program segment从磁盘读到内存中。然后在entry指向处执行内核的第一个代码。
+
+
+
+Exercise7:
+	在执行movl %eax, %cr0 语句之前，地址0x00100000和0xf0100000内容不同，执行之后内容相同，因为paging is enabled, 0xf0100000 的内容因为映射到了 0x00100000 所以会一样。注释之后，没有paging is enabled，物理地址和逻辑地址没有映射无法访问，就会出现错误。
+
+Exercise9:
+	栈指针赋值给寄存器%esp：
+	movl $(bootstacktop),%esp；
+
+	申请栈空间：
+	.data
+	.p2align PGSHIFT 
+	.globl bootstack
+	bootstack:
+	.space KSTKSIZE
+	.globl bootstacktop 
+	bootstacktop:
+
+	在最后定义了bootstacktop，栈顶位置处于栈的最高地址上，而栈指针指向栈顶，也就是指向栈的最高地址，这也说明栈是由上到下（高地址向低地址）生长的
+exercise10：
+	每次调用test_backtrace:
+	将返回地址（call指令的下一条指令的地址）压栈 
+       将ebp, esi, ebx三个寄存器的值压栈，以便退出函数前恢复它们的值 
+       调用cprintf函数打印"entering test_backtrace x"，其中x为输入参数的值 
+       将输入参数(x-1)压栈，再在栈中分配3个双字，共16字节，以方便清栈 
+       调用test_backtrace(x-1) 
+       调用cprintf函数打印"leaving test_backtrace x"，其中x为输入参数的值 
+       
+    
+    返回地址
+    ebp, esi, ebx三个寄存器的值
+    输入参数(x-1)的值
+    3个预留双字（与输入参数构成4字节，方便清栈）
+   
+       
+   https://www.cnblogs.com/wuhualong/p/lab01_exercise10_test_backtrace.html
+
